@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 
 /**
  * Класс главной активности, в которой запускаются фрагменты.
+ * 
  */
 public class MainActivity extends AppCompatActivity {
 
