@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">YaTranslateTest2017</string>
+
+    <string name="input_text">Введите текст для перевода</string>
+    <string name="translate_button">Перевести</string>
+    <string name="incomming_translate">Здесь будет перевод</string>
+    <string name="copyright_comment">Переведено сервисом «Яндекс.Переводчик» http://translate.yandex.ru/</string>
+    <string name="delete_buton">Очистить поле ввода</string>
+    <string name="connection">Подключение</string>
+    <string name="choose_language">Выберите языки</string>
+    <string name="change_language_button">&#60;----&#62;</string>
+
+    <string name="empty_history_text">Нет записей в истории</string>
+    <string name="empty_history_start">Переведите несколько слов</string>
+
+    <string name="translate_fragment_head">Перевод</string>
+    <string name="history_fragment_head">История</string>
+    <string name="info_fragment_head">Инфо</string>
+
+    <string name="info_text">Здравствуйте, меня зовут Денис, и я создал это приложение. \n Связаться со мной: decsent@yandex.ru \n\n В приложении для перевода используется сервис «Яндекс.Переводчик» http://translate.yandex.ru/</string>
+    <string name="delete_history_text">Удалить историю</string>
+    <string name="delete_dialog_msg">Удалить всю историю переводов?</string>
+    <string name="delete_history_yes">Да</string>
+    <string name="delete_history_no">Отмена</string>
+
+    <string name="search__history">Введите слово для поиска в истории</string>
+
+</resources>

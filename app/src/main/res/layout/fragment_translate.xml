@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    style="@style/Match_Parent">
+<ScrollView
+    style="@style/Match_Parent">
+
+    <LinearLayout
+        style="@style/Match_Parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            style="@style/Translate_Elements_Style"
+            android:background="@drawable/view_text_style"
+            android:orientation="vertical"
+            android:padding="6sp">
+
+            <LinearLayout
+                style="@style/Match_Parent"
+                android:orientation="horizontal"
+                android:gravity="center_horizontal">
+
+            <TextView
+                style="@style/Wrap_content"
+                android:text="@string/choose_language"
+                android:layout_margin="6sp"
+                android:textSize="18sp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/Match_Parent"
+                android:background="@drawable/view_text_style"
+                android:orientation="horizontal">
+
+                <Spinner
+                    style="@style/Wrap_content"
+                    android:id="@+id/spinnerLangFrom"
+                    android:layout_weight="2">
+                </Spinner>
+
+                <Button
+                    android:id="@+id/buttonChangeLang"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36sp"
+                    android:text="@string/change_language_button"
+                    android:layout_weight="0.5"
+                    android:textSize="14sp"/>
+
+                <Spinner
+                    style="@style/Wrap_content"
+                    android:id="@+id/spinnerLangTo"
+                    android:layout_weight="2">
+                </Spinner>
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/translateTextInput"
+            style="@style/Translate_Elements_Style"
+            android:hint="@string/input_text"
+            android:inputType="textCapSentences"
+            android:background="@drawable/view_text_style"/>
+
+        <Button
+            android:id="@+id/buttonDeleteText"
+            android:text="@string/delete_buton"
+            android:layout_width="wrap_content"
+            android:layout_height="40sp"
+            android:layout_gravity="start"
+            android:textSize="10sp"
+            android:layout_marginLeft="6sp" />
+
+        <Button
+            android:id="@+id/buttonTranslate"
+            android:text="@string/translate_button"
+            style="@style/Translate_Elements_Style"
+            android:layout_gravity="center"
+            android:background="@android:color/holo_green_light"/>
+
+        <TextView
+            android:id="@+id/translatedText"
+            android:hint="@string/incomming_translate"
+            style="@style/Translate_Elements_Style"
+            android:background="@drawable/view_text_style"/>
+
+        <TextView
+            android:id="@+id/copyright_comment"
+            android:text="@string/copyright_comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:textSize="10sp"
+            android:padding="10dp"/>
+    </LinearLayout>
+</ScrollView>
+</LinearLayout>
