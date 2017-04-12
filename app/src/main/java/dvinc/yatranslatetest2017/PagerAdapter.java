@@ -31,8 +31,11 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
                 HistoryFragment tab2 = new HistoryFragment();
                 return tab2;
             case 2:
-                InfoFragment tab3 = new InfoFragment();
+                FavouritesFragment tab3 = new FavouritesFragment();
                 return tab3;
+            case 3:
+                InfoFragment tab4 = new InfoFragment();
+                return tab4;
             default:
                 return null;
         }

@@ -1,7 +1,11 @@
 package dvinc.yatranslatetest2017.fragments;
 
 import android.app.AlertDialog;
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -15,6 +19,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -34,7 +39,7 @@ import dvinc.yatranslatetest2017.database.HistoryContract.*;
 public class HistoryFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
 
     /* Идентификатор для загрузчика */
-    private static final int GUEST_LOADER = 0;
+    private static final int HISTORY_LOADER = 0;
 
     HistoryCursorAdapter historyCursorAdapter;
     EditText searchInHistory;
@@ -54,7 +59,7 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
         listView.setEmptyView(view.findViewById(R.id.empty));
         historyCursorAdapter = new HistoryCursorAdapter(getContext(), null);
         listView.setAdapter(historyCursorAdapter);
-        listView.setTextFilterEnabled(true);
+        //listView.setTextFilterEnabled(true);
 
 //        /* Просто фича для searchView, не знаю зачем, но пусть пока будет*/
 //        searchView = (SearchView) view.findViewById(R.id.search_history);
@@ -73,7 +78,8 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
 //        });
 
 
-        searchInHistory = (EditText) view.findViewById(R.id.search_in_history);
+//        searchInHistory = (EditText) view.findViewById(R.id.search_in_history);
+
 //        searchInHistory.addTextChangedListener(new TextWatcher() {
 //            @Override
 //            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -109,8 +115,44 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
 //            }
 //        });
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                int current = 0;
+                Uri currentUri = ContentUris.withAppendedId(HistoryEntry.CONTENT_URI, id);
+                String[] projection = {
+                        HistoryContract.HistoryEntry._ID,
+                        HistoryEntry.COLUMN_TEXT_INPUT,
+                        HistoryEntry.COLUMN_TEXT_TRANSLATED,
+                        HistoryEntry.COLUMN_LANGUAGES_FROM_TO,
+                        HistoryEntry.COLUMN_BOOKMARK};
+                Cursor cursor = getActivity().getApplicationContext().getContentResolver().query(
+                        currentUri,   // URI контент-провайдера для запроса
+                        projection,             // колонки, которые попадут в результирующий курсор
+                        null,                   // без условия WHERE
+                        null,
+                        null);
+                if (cursor != null){
+                    cursor.moveToFirst();
+                    int bookmarkColumnIndex = cursor.getColumnIndex(HistoryEntry.COLUMN_BOOKMARK);
+                    String bookmark = cursor.getString(bookmarkColumnIndex);
+                    if (bookmark.equals("1")){
+                        ContentValues values = new ContentValues();
+                        values.put(HistoryEntry.COLUMN_BOOKMARK, "0");
+                        current = getActivity().getApplicationContext().getContentResolver().update(currentUri, values, null, null);
+                    } else {
+                        ContentValues values = new ContentValues();
+                        values.put(HistoryEntry.COLUMN_BOOKMARK, "1");
+                        current = getActivity().getApplicationContext().getContentResolver().update(currentUri, values, null, null);
+                    }
+                    cursor.close();
+                }
 
-        getLoaderManager().initLoader(GUEST_LOADER, null, this);
+            }
+        });
+
+
+        getLoaderManager().initLoader(HISTORY_LOADER, null, this);
         return view;
     }
 

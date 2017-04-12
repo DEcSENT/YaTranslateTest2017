@@ -12,10 +12,12 @@
 
     <string name="empty_history_text">Нет записей в истории</string>
     <string name="empty_history_start">Переведите несколько слов</string>
+    <string name="empty_favourites_text">Нет записей в избранном</string>
 
     <string name="translate_fragment_head">Перевод</string>
     <string name="history_fragment_head">История</string>
     <string name="info_fragment_head">Инфо</string>
+    <string name="favourites_fragment_head">Избранн.</string>
 
     <string name="info_text">Здравствуйте, меня зовут Денис, и я создал это приложение. \n Связаться со мной: decsent@yandex.ru \n\n В приложении для перевода используется сервис «Яндекс.Переводчик» http://translate.yandex.ru/</string>
     <string name="delete_history_text">Удалить историю</string>
@@ -24,5 +26,7 @@
     <string name="delete_history_no">Отмена</string>
 
     <string name="search__history">Введите слово для поиска в истории</string>
+
+    <string name="bookmark">Добавить в избранное</string>
 
 </resources>

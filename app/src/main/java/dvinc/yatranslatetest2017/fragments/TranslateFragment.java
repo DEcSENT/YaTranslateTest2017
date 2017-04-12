@@ -1,6 +1,7 @@
 package dvinc.yatranslatetest2017.fragments;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,9 +12,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -59,6 +62,8 @@ public class TranslateFragment extends Fragment{
     private String stringLangFrom = "ru";
     private String stringLangTo = "en";
     private Button buttonChangeLang;
+    private CheckBox bookmarkCheckbox;
+    private String chooseBookmark = "0";
 
     static final String[] LANG_SHORT_ARRAY = {"en","ar","el","it","es","zh","ko","de","no","fa",
             "pl","pt","uk","ru","fr","sv","ja"};
@@ -82,7 +87,10 @@ public class TranslateFragment extends Fragment{
         translatedText = (TextView) view.findViewById(R.id.translatedText);
         buttonDeleteInputText = (Button) view.findViewById(R.id.buttonDeleteText);
         buttonChangeLang = (Button) view.findViewById(R.id.buttonChangeLang);
+        bookmarkCheckbox = (CheckBox) view.findViewById(R.id.bookmarkCheckbox);
 
+
+        getActivity().getWindow().setSoftInputMode( WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         buttonTranslate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,7 +99,7 @@ public class TranslateFragment extends Fragment{
                 String newString = textObjectFromEdit.toString();
                 if(!newString.equals("")) {
                     BGTask task = new BGTask();
-                    task.execute(new String[]{String.valueOf(translateTextInput.getText())});
+                    task.execute(String.valueOf(translateTextInput.getText()));
                 }
             }
         });
@@ -104,6 +112,39 @@ public class TranslateFragment extends Fragment{
             }
         });
 
+
+
+        buttonChangeLang.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int current = spinnerLangFrom.getSelectedItemPosition();
+                spinnerLangFrom.setSelection(spinnerLangTo.getSelectedItemPosition());
+                spinnerLangTo.setSelection(current);
+            }
+        });
+
+        bookmarkCheckbox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(bookmarkCheckbox.isChecked()){
+                    chooseBookmark = "1";
+                }else{
+                    chooseBookmark = "0";
+                }
+            }
+        });
+
+        setupLanguageFromSpiner(view);
+        setupLanguageToSpiner(view);
+
+        return view;
+    }
+
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
         translateTextInput.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -122,22 +163,13 @@ public class TranslateFragment extends Fragment{
                     handler.sendEmptyMessageDelayed(TRIGGER_SERACH, SEARCH_TRIGGER_DELAY_IN_MS);
                 }
             }
+
+
         });
-
-        buttonChangeLang.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int current = spinnerLangFrom.getSelectedItemPosition();
-                spinnerLangFrom.setSelection(spinnerLangTo.getSelectedItemPosition());
-                spinnerLangTo.setSelection(current);
-            }
-        });
-
-        setupLanguageFromSpiner(view);
-        setupLanguageToSpiner(view);
-
-        return view;
     }
+
+
+
 
     // TODO: проверить возможную утечку памяти?
 
@@ -146,7 +178,7 @@ public class TranslateFragment extends Fragment{
         public void handleMessage(Message msg) {
             if (msg.what == TRIGGER_SERACH) {
                 BGTask task = new BGTask();
-                task.execute(new String[]{String.valueOf(translateTextInput.getText())});
+                task.execute(String.valueOf(translateTextInput.getText()));
             }
         }
     };
@@ -201,21 +233,20 @@ public class TranslateFragment extends Fragment{
             values.put(HistoryEntry.COLUMN_TEXT_INPUT, translateTextInput.getText().toString());
             values.put(HistoryEntry.COLUMN_TEXT_TRANSLATED, output);
             values.put(HistoryEntry.COLUMN_LANGUAGES_FROM_TO, stringLangFrom + '-' + stringLangTo);
-            values.put(HistoryEntry.COLUMN_BOOKMARK, "букмарк");
+            values.put(HistoryEntry.COLUMN_BOOKMARK, chooseBookmark);
 
             /* Внимание, здесь может выпасть NPE
             * TODO: пофиксить это дело
             */
-            try {
-                getActivity().getApplicationContext().getContentResolver().insert(HistoryEntry.CONTENT_URI, values);
-            } catch (Exception e){
-                Log.v("TranslateFragment", "NPE ERROR, ALARM!" + e);
-
-                /* Здесь у тостера тоже проблемы с контекстом - выпадает NPE */
-
-//                Toast.makeText(getActivity().getApplicationContext(), "Упс, выпала NPE", Toast.LENGTH_LONG)
-//                        .show();
+            Context context = getActivity().getApplicationContext();
+            if(context != null) {
+                try {
+                    context.getContentResolver().insert(HistoryEntry.CONTENT_URI, values);
+                } catch (Exception e) {
+                    Log.v("TranslateFragment", "ALARM IN onPostExecute method" + e);
+                }
             }
+
         }
         @Override
         protected void onPreExecute() {

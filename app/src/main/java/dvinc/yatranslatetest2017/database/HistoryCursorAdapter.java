@@ -2,11 +2,15 @@ package dvinc.yatranslatetest2017.database;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.Filterable;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import dvinc.yatranslatetest2017.R;
@@ -41,6 +45,7 @@ public class HistoryCursorAdapter extends CursorAdapter implements Filterable{
         TextView translatedTextTextView = (TextView) view.findViewById(R.id.textTranslated);
         TextView languagesTextView = (TextView) view.findViewById(R.id.languages);
         TextView bookmarkTextView = (TextView) view.findViewById(R.id.bookmark);
+        ImageView bookmarkColor = (ImageView) view.findViewById(R.id.bookmarkPic);
 
         // Находим индексы колонок в курсоре
         if (cursor != null) {
@@ -59,7 +64,13 @@ public class HistoryCursorAdapter extends CursorAdapter implements Filterable{
             textInputTextView.setText(textInput);
             translatedTextTextView.setText(translatedText);
             languagesTextView.setText(languages.toUpperCase());
-            bookmarkTextView.setText(bookmark);
+//            bookmarkTextView.setText(bookmark);
+
+            if (bookmark.equals("1")){
+                bookmarkColor.setColorFilter(ContextCompat.getColor(context,R.color.bookmarkYes));
+            } else {
+                bookmarkColor.setColorFilter(ContextCompat.getColor(context,R.color.bookmarkNo));
+            }
         }
     }
 

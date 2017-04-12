@@ -8,7 +8,7 @@ import android.support.v7.widget.Toolbar;
 
 /**
  * Класс главной активности, в которой запускаются фрагменты.
- * 
+ *
  */
 public class MainActivity extends AppCompatActivity {
 
@@ -23,7 +23,9 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText(R.string.translate_fragment_head));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.history_fragment_head));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.favourites_fragment_head));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.info_fragment_head));
+
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);

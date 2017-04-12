@@ -62,14 +62,29 @@
             android:inputType="textCapSentences"
             android:background="@drawable/view_text_style"/>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
         <Button
             android:id="@+id/buttonDeleteText"
             android:text="@string/delete_buton"
             android:layout_width="wrap_content"
             android:layout_height="40sp"
-            android:layout_gravity="start"
+            android:layout_weight="1"
             android:textSize="10sp"
             android:layout_marginLeft="6sp" />
+
+            <android.support.v7.widget.AppCompatCheckBox
+                android:id="@+id/bookmarkCheckbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/bookmark"
+                android:textSize="14sp"
+                android:layout_weight="4"
+                />
+
+        </LinearLayout>
+
 
         <Button
             android:id="@+id/buttonTranslate"

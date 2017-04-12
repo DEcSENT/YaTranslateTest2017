@@ -3,4 +3,7 @@
     <color name="colorPrimary">#fa2d37</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#b100ff</color>
+
+    <color name="bookmarkYes">#009c08</color>
+    <color name="bookmarkNo">#ff0900</color>
 </resources>
