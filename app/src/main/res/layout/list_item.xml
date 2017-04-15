@@ -14,8 +14,7 @@
 
         <ImageView
             android:id="@+id/bookmarkPic"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/Wrap_content"
             android:tint="@color/bookmarkNo"
             android:src="@drawable/ic_bookmark"
             />

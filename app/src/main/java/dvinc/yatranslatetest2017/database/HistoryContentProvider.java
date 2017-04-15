@@ -11,16 +11,17 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
 import dvinc.yatranslatetest2017.database.HistoryContract.HistoryEntry;
 
 
-// TODO: проверить предупреждение о @Nullable для всех uri. Добавить больше комментариев
+// TODO: проверить предупреждение о NPE. Добавить больше комментариев
 
 /**
- *
+ * Класс контент-провайдера.
  */
 public class HistoryContentProvider extends ContentProvider {
 
@@ -45,9 +46,9 @@ public class HistoryContentProvider extends ContentProvider {
         return true;
     }
 
-
+    /* Примечение: здесь курсор для всей истории сортируется в обратном порядке, для отображения последних записей вверху истории. */
     @Override
-    public Cursor query(@Nullable Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+    public Cursor query(@NonNull Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         SQLiteDatabase database = mDbHelper.getReadableDatabase();
         Cursor cursor;
 
@@ -55,7 +56,7 @@ public class HistoryContentProvider extends ContentProvider {
         switch (match) {
             case ALL_HISTORY:
                 cursor = database.query(HistoryEntry.TABLE_NAME, projection, selection, selectionArgs,
-                        null, null, sortOrder);
+                        null, null, HistoryEntry._ID + " DESC");
                 break;
             case HISTORY_ID:
                 selection = HistoryEntry._ID + "=?";
@@ -72,9 +73,8 @@ public class HistoryContentProvider extends ContentProvider {
         return cursor;
     }
 
-    @Nullable
     @Override
-    public String getType(Uri uri) {
+    public String getType(@NonNull Uri uri) {
         final int match = sUriMatcher.match(uri);
         switch (match) {
             case ALL_HISTORY:
@@ -88,7 +88,7 @@ public class HistoryContentProvider extends ContentProvider {
 
     @Nullable
     @Override
-    public Uri insert(Uri uri, ContentValues values) {
+    public Uri insert(@NonNull Uri uri, ContentValues values) {
         final int match = sUriMatcher.match(uri);
         switch (match) {
             case ALL_HISTORY:
@@ -99,7 +99,7 @@ public class HistoryContentProvider extends ContentProvider {
     }
 
     @Override
-    public int delete(Uri uri, String selection, String[] selectionArgs) {
+    public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
         int rowsDeleted;
 
@@ -126,7 +126,7 @@ public class HistoryContentProvider extends ContentProvider {
     }
 
     @Override
-    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+    public int update(@NonNull Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         final int match = sUriMatcher.match(uri);
         switch (match) {
             case ALL_HISTORY:

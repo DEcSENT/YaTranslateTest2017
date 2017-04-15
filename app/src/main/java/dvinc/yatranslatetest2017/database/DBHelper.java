@@ -19,7 +19,7 @@ class DBHelper extends SQLiteOpenHelper {
     private final static String DATABASE_NAME = "translateHistory_database";
 
     DBHelper(Context context){
-        super(context,DATABASE_NAME,null,DATABASE_VERSION);
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override

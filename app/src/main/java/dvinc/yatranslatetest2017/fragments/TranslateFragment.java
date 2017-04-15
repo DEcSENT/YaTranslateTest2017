@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.support.v4.app.Fragment;
+import android.widget.Toast;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -32,6 +33,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 import dvinc.yatranslatetest2017.R;
 import dvinc.yatranslatetest2017.database.HistoryContract.*;
+import static dvinc.yatranslatetest2017.YandexApiData.*;
 
 /**
  * Created by Space 5 on 28.03.2017.
@@ -44,14 +46,11 @@ import dvinc.yatranslatetest2017.database.HistoryContract.*;
  */
 public class TranslateFragment extends Fragment{
 
-    private static final String API_KEY = "trnsl.1.1.20170328T143200Z.d9c846c67aa9b21b.509d1e3c9fab6c4803e6c85b6ff90749f02484e2";
-    private static final String YA_URL = "https://translate.yandex.net/api/v1.5/tr.json/translate?key=";
-    private static final String COPYRIGHT_COMMENT = "Переведено сервисом «Яндекс.Переводчик» http://translate.yandex.ru/";
+    private static final String LOG_TAG = "TranslateFragment";
 
     private final int TRIGGER_SERACH = 1;
     // Where did 1000 come from? It's arbitrary, since I can't find average android typing speed.
     private final long SEARCH_TRIGGER_DELAY_IN_MS = 1000;
-
 
     private EditText translateTextInput;
     private Button buttonTranslate;
@@ -64,18 +63,12 @@ public class TranslateFragment extends Fragment{
     private Button buttonChangeLang;
     private CheckBox bookmarkCheckbox;
     private String chooseBookmark = "0";
+    private static int code = 0;
+    private static String code_message = "";
 
-    static final String[] LANG_SHORT_ARRAY = {"en","ar","el","it","es","zh","ko","de","no","fa",
-            "pl","pt","uk","ru","fr","sv","ja"};
-
-    static final String[] LANG_SHORT_ARRAY_FULL = {"english","arabian","hellenic","italian","spanish",
-            "chinese","korean","german","norwegian","persian",
-            "polish","portuguese","ukrainian","russian","french",
-            "swedish","japanese"};
-
+    /* Стартовые языки Русский - Английский. */
     static final int START_LANG_FROM = 13;
     static final int START_LANG_TO = 0;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -89,7 +82,7 @@ public class TranslateFragment extends Fragment{
         buttonChangeLang = (Button) view.findViewById(R.id.buttonChangeLang);
         bookmarkCheckbox = (CheckBox) view.findViewById(R.id.bookmarkCheckbox);
 
-
+        /* Скрываем клавиатуру при старте приложения. */
         getActivity().getWindow().setSoftInputMode( WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         buttonTranslate.setOnClickListener(new View.OnClickListener() {
@@ -140,8 +133,7 @@ public class TranslateFragment extends Fragment{
         return view;
     }
 
-
-
+    //TODO: здесь что-то не так с методом afterTextChanged, он отправляет пустой текст после быстрого полного побуквенного удаления текста. Нужно пофиксить, иначе выпадает "Код 0"
     @Override
     public void onResume() {
         super.onResume();
@@ -156,20 +148,14 @@ public class TranslateFragment extends Fragment{
             public void afterTextChanged(Editable s) {
 
                 /* Перед отправкой текста на перевод нужно проверить не пустой ли он. */
-
                 String textInput = translateTextInput.getText().toString();
                 if(!textInput.trim().isEmpty()) {
                     handler.removeMessages(TRIGGER_SERACH);
                     handler.sendEmptyMessageDelayed(TRIGGER_SERACH, SEARCH_TRIGGER_DELAY_IN_MS);
                 }
             }
-
-
         });
     }
-
-
-
 
     // TODO: проверить возможную утечку памяти?
 
@@ -201,57 +187,99 @@ public class TranslateFragment extends Fragment{
             return output;
         }
 
+        /**
+         *  Метод для создания подключения и отправки запроса в интернет.
+         *  В ответе получаем строку в формате json, парсим её, получаем перевод, и код ответа.
+         */
         private String getOutputFromUrl(String text) throws IOException {
-            String translated;
+            String translated = "";
 
             URL urlObj = new URL(YA_URL + API_KEY);
-            HttpsURLConnection connection = (HttpsURLConnection)urlObj.openConnection();
-            connection.setRequestMethod("POST");
-            connection.setDoOutput(true);
+            try {
+                HttpsURLConnection connection = (HttpsURLConnection) urlObj.openConnection();
+                connection.setRequestMethod("POST");
+                connection.setDoOutput(true);
 
-            DataOutputStream dataOutputStream = new DataOutputStream(connection.getOutputStream());
-            dataOutputStream.writeBytes("&text=" + URLEncoder.encode(text, "UTF-8") + "&lang=" + stringLangFrom + '-' + stringLangTo);
+                DataOutputStream dataOutputStream = new DataOutputStream(connection.getOutputStream());
+                dataOutputStream.writeBytes("&text=" + URLEncoder.encode(text, "UTF-8") + "&lang=" + stringLangFrom + '-' + stringLangTo);
 
-            InputStream response = connection.getInputStream();
-            String jsonString = new Scanner(response).nextLine();
+                InputStream response = connection.getInputStream();
+                String jsonString = new Scanner(response).nextLine();
 
-            int start = jsonString.indexOf("[");
-            int end = jsonString.indexOf("]");
-            translated = jsonString.substring(start + 2, end - 1);
-            connection.disconnect();
+                int start = jsonString.indexOf("[");
+                int end = jsonString.indexOf("]");
+                translated = jsonString.substring(start + 2, end - 1);
+                connection.disconnect();
+
+                code = Integer.parseInt(jsonString.substring(8, 11));
+            } catch (Exception e){
+                Log.v(LOG_TAG, "ALARM in getOutputFromUrl method"+e);
+            }
 
             return translated;
         }
 
         @Override
         protected void onPostExecute(String output) {
-            translatedText.setText(output);
 
-            /* Передаем данные в контент провайдер */
+            /* Если код полученного ответа равен 200, значит перевод выполнен успешно, и данные можно записать в историю. */
+            if (code == 200) {
+                translatedText.setText(output);
 
-            ContentValues values = new ContentValues();
-            values.put(HistoryEntry.COLUMN_TEXT_INPUT, translateTextInput.getText().toString());
-            values.put(HistoryEntry.COLUMN_TEXT_TRANSLATED, output);
-            values.put(HistoryEntry.COLUMN_LANGUAGES_FROM_TO, stringLangFrom + '-' + stringLangTo);
-            values.put(HistoryEntry.COLUMN_BOOKMARK, chooseBookmark);
+                /* Передаем данные в контент-провайдер */
+                ContentValues values = new ContentValues();
+                values.put(HistoryEntry.COLUMN_TEXT_INPUT, translateTextInput.getText().toString());
+                values.put(HistoryEntry.COLUMN_TEXT_TRANSLATED, output);
+                values.put(HistoryEntry.COLUMN_LANGUAGES_FROM_TO, stringLangFrom + " - " + stringLangTo);
+                values.put(HistoryEntry.COLUMN_BOOKMARK, chooseBookmark);
 
-            /* Внимание, здесь может выпасть NPE
-            * TODO: пофиксить это дело
-            */
-            Context context = getActivity().getApplicationContext();
-            if(context != null) {
-                try {
-                    context.getContentResolver().insert(HistoryEntry.CONTENT_URI, values);
-                } catch (Exception e) {
-                    Log.v("TranslateFragment", "ALARM IN onPostExecute method" + e);
+                Context context = getActivity().getApplicationContext();
+                if (context != null) {
+                    try {
+                        context.getContentResolver().insert(HistoryEntry.CONTENT_URI, values);
+                    } catch (Exception e) {
+                        Log.v(LOG_TAG, "ALARM IN onPostExecute method" + e);
+                    }
                 }
-            }
 
+                /* Если код полученного ответа равен чему-то другому, значит что-то пошло не так. В зависимости от кода показывается всплывающее сообщение, соответствующее этому коду. */
+            } else if (code == 401){
+                code_message = getResources().getString(R.string.code_401);
+            } else if (code == 402){
+                code_message = getResources().getString(R.string.code_402);
+            } else if (code == 404){
+                code_message = getResources().getString(R.string.code_404);
+            } else if (code == 413){
+                code_message = getResources().getString(R.string.code_413);
+            } else if (code == 422){
+                code_message = getResources().getString(R.string.code_422);
+            } else if (code == 501){
+                code_message = getResources().getString(R.string.code_501);
+            } else {
+
+                /* Если ответное сообщение не было получено, значит нет подключения к интернету. */
+                code_message = getResources().getString(R.string.code_something_wrong);
+            }
+            if(code != 200) {
+                showCodeMessage(code, code_message);
+            }
+            code = 0;
         }
         @Override
         protected void onPreExecute() {
             translatedText.setText(R.string.connection);
         }
+    }
+
+    /**
+     * Метод для отображения всплывающего сообщения в случае, если что-то пойдет неправильно и перевода не будет, либо возникнет ошибка на стороне Яндекса.
+     * @param code - Код ошибки.
+     * @param code_message - Текст сообщения.
+     */
+    private void showCodeMessage(int code, String code_message){
+        Toast.makeText(this.getActivity().getWindow().getContext(), code_message + " Код: " +
+                code, Toast.LENGTH_LONG)
+                .show();
     }
 
     /**

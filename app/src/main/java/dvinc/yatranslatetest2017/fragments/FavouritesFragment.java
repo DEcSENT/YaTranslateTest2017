@@ -24,6 +24,10 @@ import dvinc.yatranslatetest2017.database.HistoryCursorAdapter;
  * Created by Space 5 on 11.04.2017.
  */
 
+/**
+ * Класс для фрагмента с избранными переводами.
+ */
+
 public class FavouritesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
 
     private static final int HISTORY_LOADER = 0;
@@ -37,6 +41,7 @@ public class FavouritesFragment extends Fragment implements LoaderManager.Loader
         favouritesCursorAdapter = new HistoryCursorAdapter(getContext(), null);
         listViewFavourites.setAdapter(favouritesCursorAdapter);
 
+        /* По клику в listview ставим\убираем метку "Избранного". */
         listViewFavourites.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
@@ -49,9 +54,9 @@ public class FavouritesFragment extends Fragment implements LoaderManager.Loader
                         HistoryEntry.COLUMN_LANGUAGES_FROM_TO,
                         HistoryEntry.COLUMN_BOOKMARK};
                 Cursor cursor = getActivity().getApplicationContext().getContentResolver().query(
-                        currentUri,   // URI контент-провайдера для запроса
-                        projection,             // колонки, которые попадут в результирующий курсор
-                        null,                   // без условия WHERE
+                        currentUri,   // URI контент-провайдера для запроса конкретной записи
+                        projection,
+                        null,
                         null,
                         null);
                 if (cursor != null){
@@ -69,7 +74,6 @@ public class FavouritesFragment extends Fragment implements LoaderManager.Loader
                     }
                     cursor.close();
                 }
-
             }
         });
 
@@ -91,9 +95,9 @@ public class FavouritesFragment extends Fragment implements LoaderManager.Loader
         return new CursorLoader(getActivity(),
                 HistoryContract.HistoryEntry.CONTENT_URI,   // URI контент-провайдера для запроса
                 projection,             // колонки, которые попадут в результирующий курсор
-                "bookmark="+"1",                   // без условия WHERE
-                null,                   // без аргументов
-                null);                  // сортировка по умолчанию
+                "bookmark="+"1",                   // условие для отображения избранных записей
+                null,
+                null);
     }
 
     @Override

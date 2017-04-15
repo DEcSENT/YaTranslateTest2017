@@ -1,4 +1,4 @@
-package dvinc.yatranslatetest2017;
+package dvinc.yatranslatetest2017.pageradapters;
 
 /**
  * Created by Space 5 on 30.03.2017.
@@ -20,22 +20,13 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-
-        //TODO: пофиксить предупреждение
-
         switch (position) {
             case 0:
-                TranslateFragment tab1 = new TranslateFragment();
-                return tab1;
+                return new TranslateFragment();
             case 1:
-                HistoryFragment tab2 = new HistoryFragment();
-                return tab2;
+                return new MainHistoryFragment();
             case 2:
-                FavouritesFragment tab3 = new FavouritesFragment();
-                return tab3;
-            case 3:
-                InfoFragment tab4 = new InfoFragment();
-                return tab4;
+                return new InfoFragment();
             default:
                 return null;
         }

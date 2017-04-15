@@ -44,11 +44,11 @@ public class HistoryCursorAdapter extends CursorAdapter implements Filterable{
         TextView textInputTextView = (TextView) view.findViewById(R.id.textInput);
         TextView translatedTextTextView = (TextView) view.findViewById(R.id.textTranslated);
         TextView languagesTextView = (TextView) view.findViewById(R.id.languages);
-        TextView bookmarkTextView = (TextView) view.findViewById(R.id.bookmark);
+        //TextView bookmarkTextView = (TextView) view.findViewById(R.id.bookmark);
         ImageView bookmarkColor = (ImageView) view.findViewById(R.id.bookmarkPic);
 
-        // Находим индексы колонок в курсоре
         if (cursor != null) {
+            // Находим индексы столбцов в курсоре
             int textInputColumnIndex = cursor.getColumnIndex(COLUMN_TEXT_INPUT);
             int translatedTextColumnIndex = cursor.getColumnIndex(COLUMN_TEXT_TRANSLATED);
             int languagesColumnIndex = cursor.getColumnIndex(COLUMN_LANGUAGES_FROM_TO);
@@ -66,6 +66,7 @@ public class HistoryCursorAdapter extends CursorAdapter implements Filterable{
             languagesTextView.setText(languages.toUpperCase());
 //            bookmarkTextView.setText(bookmark);
 
+            // Окрашиваем заметку в зависимости от того, избранная ли эта запись (зеленый цвет), или нет (красный цвет)
             if (bookmark.equals("1")){
                 bookmarkColor.setColorFilter(ContextCompat.getColor(context,R.color.bookmarkYes));
             } else {

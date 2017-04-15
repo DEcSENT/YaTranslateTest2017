@@ -6,6 +6,8 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 
+import dvinc.yatranslatetest2017.pageradapters.PagerAdapter;
+
 /**
  * Класс главной активности, в которой запускаются фрагменты.
  *
@@ -23,7 +25,6 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText(R.string.translate_fragment_head));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.history_fragment_head));
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.favourites_fragment_head));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.info_fragment_head));
 
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);

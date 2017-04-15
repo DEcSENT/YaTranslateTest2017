@@ -80,11 +80,8 @@
                 android:layout_height="wrap_content"
                 android:text="@string/bookmark"
                 android:textSize="14sp"
-                android:layout_weight="4"
-                />
-
+                android:layout_weight="4" />
         </LinearLayout>
-
 
         <Button
             android:id="@+id/buttonTranslate"
@@ -100,13 +97,18 @@
             android:background="@drawable/view_text_style"/>
 
         <TextView
-            android:id="@+id/copyright_comment"
             android:text="@string/copyright_comment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="3dp"
-            android:textSize="10sp"
-            android:padding="10dp"/>
+            android:layout_margin="3sp"
+            android:textSize="18sp"
+            />
+        <TextView
+            android:text="@string/copyright_comment2"
+            style="@style/Wrap_content"
+            android:layout_margin="3sp"
+            android:textSize="18sp"
+            android:autoLink="web"/>
     </LinearLayout>
 </ScrollView>
 </LinearLayout>
