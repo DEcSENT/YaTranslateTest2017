@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:baselineAligned="false">
 
     <LinearLayout
         android:id="@+id/linearBookmark"
@@ -11,14 +12,12 @@
         android:layout_weight="1"
         android:orientation="horizontal"
         android:gravity="center">
-
         <ImageView
             android:id="@+id/bookmarkPic"
             style="@style/Wrap_content"
             android:tint="@color/bookmarkNo"
             android:src="@drawable/ic_bookmark"
-            />
-
+            android:contentDescription="@string/bookmark_description"/>
         <TextView
             android:id="@+id/bookmark"
             style="@style/Wrap_content"
@@ -32,14 +31,12 @@
         android:layout_height="wrap_content"
         android:layout_weight="4"
         android:orientation="vertical">
-
         <TextView
             android:id="@+id/textInput"
             style="@style/Wrap_content"
             android:fontFamily="sans-serif-medium"
             android:textAppearance="?android:textAppearanceLarge"
             android:textColor="#2B3D4D" />
-
         <TextView
             android:id="@+id/textTranslated"
             style="@style/Wrap_content"

@@ -1,39 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/content_main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    style="@style/Match_Parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-
-    android:orientation="vertical">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <!--<SearchView-->
-            <!--android:id="@+id/search_history"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:queryHint="Поиск"-->
-            <!--android:iconifiedByDefault="false"-->
-            <!--/>-->
-
-        <!--<EditText-->
-            <!--android:id="@+id/search_in_history"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:hint="@string/search__history"/>-->
-    </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <ListView
             android:id="@+id/list"
@@ -64,6 +39,4 @@
                 android:textAppearance="?android:textAppearanceSmall"
                 android:textColor="#A2AAB0" />
         </RelativeLayout>
-
-    </RelativeLayout>
-</LinearLayout>
+</RelativeLayout>

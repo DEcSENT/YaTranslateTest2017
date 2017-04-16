@@ -27,9 +27,10 @@
     <string name="delete_history_yes">Да</string>
     <string name="delete_history_no">Отмена</string>
 
-    <string name="search__history">Введите слово для поиска в истории</string>
+    <string name="search_history">Введите слово для поиска в истории</string>
 
     <string name="bookmark">Добавить в избранное</string>
+    <string name="bookmark_description">Метка избранного</string>
 
     <string name="code_401">Неправильный API-ключ.</string>
     <string name="code_402">API-ключ заблокирован.</string>
@@ -37,6 +38,6 @@
     <string name="code_413">Превышен максимально допустимый размер текста.</string>
     <string name="code_422">Текст не может быть переведен.</string>
     <string name="code_501">Заданное направление перевода не поддерживается.</string>
-    <string name="code_something_wrong">Что-то пошло не так. Возможно нет подключения к сети. </string>
+    <string name="code_something_wrong">Ошибка подключения. Повторите попытку. </string>
 
 </resources>

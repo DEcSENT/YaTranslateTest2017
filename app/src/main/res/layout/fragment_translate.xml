@@ -1,25 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    style="@style/Match_Parent">
-<ScrollView
     style="@style/Match_Parent">
 
     <LinearLayout
         style="@style/Match_Parent"
         android:orientation="vertical">
-
         <LinearLayout
             style="@style/Translate_Elements_Style"
             android:background="@drawable/view_text_style"
             android:orientation="vertical"
             android:padding="6sp">
-
             <LinearLayout
                 style="@style/Match_Parent"
                 android:orientation="horizontal"
                 android:gravity="center_horizontal">
-
             <TextView
                 style="@style/Wrap_content"
                 android:text="@string/choose_language"
@@ -37,7 +32,6 @@
                     android:id="@+id/spinnerLangFrom"
                     android:layout_weight="2">
                 </Spinner>
-
                 <Button
                     android:id="@+id/buttonChangeLang"
                     android:layout_width="wrap_content"
@@ -51,7 +45,6 @@
                     android:id="@+id/spinnerLangTo"
                     android:layout_weight="2">
                 </Spinner>
-
             </LinearLayout>
         </LinearLayout>
 
@@ -72,12 +65,11 @@
             android:layout_height="40sp"
             android:layout_weight="1"
             android:textSize="10sp"
-            android:layout_marginLeft="6sp" />
+            android:layout_marginStart="6sp" />
 
             <android.support.v7.widget.AppCompatCheckBox
                 android:id="@+id/bookmarkCheckbox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/Wrap_content"
                 android:text="@string/bookmark"
                 android:textSize="14sp"
                 android:layout_weight="4" />
@@ -95,14 +87,12 @@
             android:hint="@string/incomming_translate"
             style="@style/Translate_Elements_Style"
             android:background="@drawable/view_text_style"/>
-
         <TextView
             android:text="@string/copyright_comment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="3sp"
-            android:textSize="18sp"
-            />
+            android:textSize="18sp" />
         <TextView
             android:text="@string/copyright_comment2"
             style="@style/Wrap_content"
@@ -111,4 +101,3 @@
             android:autoLink="web"/>
     </LinearLayout>
 </ScrollView>
-</LinearLayout>

@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    style="@style/Match_Parent"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/Wrap_content"
         android:layout_margin="3sp"
         android:textSize="18sp"
         android:text="@string/info_text"
@@ -17,8 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="3sp"
-        android:textSize="18sp"
-        />
+        android:textSize="18sp" />
     <TextView
         android:text="@string/copyright_comment2"
         android:layout_width="match_parent"
@@ -26,5 +23,4 @@
         android:layout_margin="3sp"
         android:textSize="18sp"
         android:autoLink="web"/>
-
 </LinearLayout>
