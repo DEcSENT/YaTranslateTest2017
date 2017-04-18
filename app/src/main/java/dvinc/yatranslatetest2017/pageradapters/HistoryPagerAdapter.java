@@ -1,14 +1,19 @@
 package dvinc.yatranslatetest2017.pageradapters;
 
-/**
- * Created by Space 5 on 13.04.2017.
- */
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import dvinc.yatranslatetest2017.fragments.*;
 
+/**
+ * Created by Space 5 on 13.04.2017.
+ *
+ */
+
+/**
+ * TODO: описание класса
+ */
 public class HistoryPagerAdapter extends FragmentStatePagerAdapter {
     private int mNumOfTabs;
 

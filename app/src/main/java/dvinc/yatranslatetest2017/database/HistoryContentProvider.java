@@ -2,6 +2,7 @@ package dvinc.yatranslatetest2017.database;
 
 /**
  * Created by Space 5 on 06.04.2017.
+ *
  */
 
 import android.content.ContentProvider;
@@ -46,7 +47,6 @@ public class HistoryContentProvider extends ContentProvider {
         return true;
     }
 
-    /* Примечение: здесь курсор для всей истории сортируется в обратном порядке, для отображения последних записей вверху истории. */
     @Override
     public Cursor query(@NonNull Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         SQLiteDatabase database = mDbHelper.getReadableDatabase();
@@ -55,6 +55,7 @@ public class HistoryContentProvider extends ContentProvider {
         int match = sUriMatcher.match(uri);
         switch (match) {
             case ALL_HISTORY:
+                /* Примечение: здесь курсор для всей истории сортируется в обратном порядке, для отображения последних записей вверху истории. */
                 cursor = database.query(HistoryEntry.TABLE_NAME, projection, selection, selectionArgs,
                         null, null, HistoryEntry._ID + " DESC");
                 break;

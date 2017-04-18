@@ -6,6 +6,7 @@ import android.provider.BaseColumns;
 
 /**
  * Created by Space 5 on 06.04.2017.
+ *
  */
 
 // TODO: Добавить описания классов

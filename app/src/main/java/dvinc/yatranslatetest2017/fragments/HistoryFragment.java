@@ -30,6 +30,7 @@ import dvinc.yatranslatetest2017.database.HistoryContract.*;
 
 /**
  * Created by Space 5 on 30.03.2017.
+ *
  */
 
 /**

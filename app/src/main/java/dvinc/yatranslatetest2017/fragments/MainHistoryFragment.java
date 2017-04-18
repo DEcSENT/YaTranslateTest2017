@@ -20,6 +20,7 @@ import dvinc.yatranslatetest2017.pageradapters.HistoryPagerAdapter;
 import dvinc.yatranslatetest2017.R;
 /**
  * Created by Space 5 on 13.04.2017.
+ *
  */
 
 /**

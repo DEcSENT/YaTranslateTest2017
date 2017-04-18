@@ -2,6 +2,7 @@ package dvinc.yatranslatetest2017;
 
 /**
  * Created by Space 5 on 13.04.2017.
+ *
  */
 
 /**
@@ -13,10 +14,10 @@ public class YandexApiData {
 
     // TODO: добавить больше языков
 
-    public static final String[] LANG_SHORT_ARRAY = {"en","ar","el","it","es","zh","ko","de","no","fa",
-            "pl","pt","uk","ru","fr","sv","ja"};
-    public static final String[] LANG_SHORT_ARRAY_FULL = {"english","arabian","hellenic","italian","spanish",
-            "chinese","korean","german","norwegian","persian",
-            "polish","portuguese","ukrainian","russian","french",
-            "swedish","japanese"};
+    public static final String[] LANG_SHORT_ARRAY = {"en","ar","ba","be","el","da","he","it","es","zh","ko","la","de","no","fa",
+            "pl","pt","ru","uk","fr","sv","eo","ja"};
+    public static final String[] LANG_SHORT_ARRAY_FULL = {"Английский","Арабский","Башкирский","Белорусский","Греческий","Датский","Иврит","Итальянский","Испанский",
+            "Китайский","Корейский","Латынь","Немецкий","Норвежский","Персидский",
+            "Польский","Португальский","Русский","Украинский","Французский",
+            "Шведский","Эсперанто","Японский"};
 }

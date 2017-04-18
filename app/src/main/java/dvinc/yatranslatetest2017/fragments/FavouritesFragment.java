@@ -22,6 +22,7 @@ import dvinc.yatranslatetest2017.database.HistoryCursorAdapter;
 
 /**
  * Created by Space 5 on 11.04.2017.
+ *
  */
 
 /**

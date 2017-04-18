@@ -10,6 +10,7 @@ import dvinc.yatranslatetest2017.R;
 
 /**
  * Created by Space 5 on 30.03.2017.
+ *
  */
 
 /**

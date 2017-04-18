@@ -37,6 +37,7 @@ import static dvinc.yatranslatetest2017.YandexApiData.*;
 
 /**
  * Created by Space 5 on 28.03.2017.
+ *
  */
 
 // TODO: добавить больше комментариев.
@@ -63,11 +64,11 @@ public class TranslateFragment extends Fragment{
     private Button buttonChangeLang;
     private CheckBox bookmarkCheckbox;
     private String chooseBookmark = "0";
-    private static int code = 0;
-    private static String code_message = "";
+    private static int response_code = 0;
+    private static String response_code_message = "";
 
     /* Стартовые языки Русский - Английский. */
-    static final int START_LANG_FROM = 13;
+    static final int START_LANG_FROM = 17;
     static final int START_LANG_TO = 0;
 
     @Override
@@ -83,7 +84,7 @@ public class TranslateFragment extends Fragment{
         bookmarkCheckbox = (CheckBox) view.findViewById(R.id.bookmarkCheckbox);
 
         /* Скрываем клавиатуру при старте приложения. */
-        getActivity().getWindow().setSoftInputMode( WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         buttonTranslate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,6 +98,7 @@ public class TranslateFragment extends Fragment{
             }
         });
 
+        /** Метод для очистки поля ввода текста на перевод и самого поля для перевода. */
         buttonDeleteInputText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,8 +107,7 @@ public class TranslateFragment extends Fragment{
             }
         });
 
-
-
+        /** Метод для зеркальной смены языков в спиннерах. */
         buttonChangeLang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -116,6 +117,7 @@ public class TranslateFragment extends Fragment{
             }
         });
 
+        /** Метод для чекбокса избранного. */
         bookmarkCheckbox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,8 +129,8 @@ public class TranslateFragment extends Fragment{
             }
         });
 
-        setupLanguageFromSpiner(view);
-        setupLanguageToSpiner(view);
+        setupLanguageFromSpinner(view);
+        setupLanguageToSpinner(view);
 
         return view;
     }
@@ -137,6 +139,7 @@ public class TranslateFragment extends Fragment{
     @Override
     public void onResume() {
         super.onResume();
+        /* Этот метод был вынесен сюда, чтобы избежать произвольной отправки текста на перевод при пересоздании фрагмента. */
         translateTextInput.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -211,7 +214,7 @@ public class TranslateFragment extends Fragment{
                 translated = jsonString.substring(start + 2, end - 1);
                 connection.disconnect();
 
-                code = Integer.parseInt(jsonString.substring(8, 11));
+                response_code = Integer.parseInt(jsonString.substring(8, 11));
             } catch (Exception e){
                 Log.v(LOG_TAG, "ALARM in getOutputFromUrl method"+e);
             }
@@ -223,7 +226,7 @@ public class TranslateFragment extends Fragment{
         protected void onPostExecute(String output) {
 
             /* Если код полученного ответа равен 200, значит перевод выполнен успешно, и данные можно записать в историю. */
-            if (code == 200) {
+            if (response_code == 200) {
                 translatedText.setText(output);
 
                 /* Передаем данные в контент-провайдер */
@@ -243,27 +246,27 @@ public class TranslateFragment extends Fragment{
                 }
 
                 /* Если код полученного ответа равен чему-то другому, значит что-то пошло не так. В зависимости от кода показывается всплывающее сообщение, соответствующее этому коду. */
-            } else if (code == 401){
-                code_message = getResources().getString(R.string.code_401);
-            } else if (code == 402){
-                code_message = getResources().getString(R.string.code_402);
-            } else if (code == 404){
-                code_message = getResources().getString(R.string.code_404);
-            } else if (code == 413){
-                code_message = getResources().getString(R.string.code_413);
-            } else if (code == 422){
-                code_message = getResources().getString(R.string.code_422);
-            } else if (code == 501){
-                code_message = getResources().getString(R.string.code_501);
+            } else if (response_code == 401){
+                response_code_message = getResources().getString(R.string.code_401);
+            } else if (response_code == 402){
+                response_code_message = getResources().getString(R.string.code_402);
+            } else if (response_code == 404){
+                response_code_message = getResources().getString(R.string.code_404);
+            } else if (response_code == 413){
+                response_code_message = getResources().getString(R.string.code_413);
+            } else if (response_code == 422){
+                response_code_message = getResources().getString(R.string.code_422);
+            } else if (response_code == 501){
+                response_code_message = getResources().getString(R.string.code_501);
             } else {
 
                 /* Если ответное сообщение не было получено, значит нет подключения к интернету. */
-                code_message = getResources().getString(R.string.code_something_wrong);
+                response_code_message = getResources().getString(R.string.code_something_wrong);
             }
-            if(code != 200) {
-                showCodeMessage(code, code_message);
+            if(response_code != 200) {
+                showCodeMessage(response_code, response_code_message);
             }
-            code = 0;
+            response_code = 0;
         }
         @Override
         protected void onPreExecute() {
@@ -285,7 +288,7 @@ public class TranslateFragment extends Fragment{
     /**
      * Метод для спиннера с выбором языка с которого нужно перевести.
      */
-    private void setupLanguageFromSpiner(View view){
+    private void setupLanguageFromSpinner(View view){
         ArrayAdapter<String> adapterSpinnerFrom = new ArrayAdapter<>(this.getActivity(),
                 android.R.layout.simple_spinner_item, LANG_SHORT_ARRAY_FULL);
         adapterSpinnerFrom.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -307,7 +310,7 @@ public class TranslateFragment extends Fragment{
     /**
      * Метод для спиннера с выбором языка на который нужно перевести.
      */
-    private void setupLanguageToSpiner(View view){
+    private void setupLanguageToSpinner(View view){
         ArrayAdapter<String> adapterSpinnerTo = new ArrayAdapter<>(this.getActivity(),
                 android.R.layout.simple_spinner_item, LANG_SHORT_ARRAY_FULL);
         adapterSpinnerTo.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
