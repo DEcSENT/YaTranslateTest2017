@@ -28,8 +28,11 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
             case 0:
                 return new TranslateFragment();
             case 1:
+                // Здесь и ниже переменная зануляется TODO: больше написать
+                TranslateFragment.current_id = 0;
                 return new MainHistoryFragment();
             case 2:
+                TranslateFragment.current_id = 0;
                 return new InfoFragment();
             default:
                 return null;

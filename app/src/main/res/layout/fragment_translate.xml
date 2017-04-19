@@ -1,25 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    style="@style/Match_Parent">
+    style="@style/Match_Parent"
+    android:orientation="vertical">
 
     <LinearLayout
         style="@style/Match_Parent"
         android:orientation="vertical">
+
         <LinearLayout
             style="@style/Translate_Elements_Style"
             android:background="@drawable/view_text_style"
             android:orientation="vertical"
             android:padding="6sp">
+
             <LinearLayout
                 style="@style/Match_Parent"
-                android:orientation="horizontal"
-                android:gravity="center_horizontal">
-            <TextView
-                style="@style/Wrap_content"
-                android:text="@string/choose_language"
-                android:layout_margin="6sp"
-                android:textSize="18sp"/>
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/Wrap_content"
+                    android:layout_margin="6sp"
+                    android:text="@string/choose_language"
+                    android:textSize="18sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -28,21 +31,22 @@
                 android:orientation="horizontal">
 
                 <Spinner
-                    style="@style/Wrap_content"
                     android:id="@+id/spinnerLangFrom"
+                    style="@style/Wrap_content"
                     android:layout_weight="2">
                 </Spinner>
+
                 <Button
                     android:id="@+id/buttonChangeLang"
                     android:layout_width="wrap_content"
                     android:layout_height="36sp"
-                    android:text="@string/change_language_button"
                     android:layout_weight="0.5"
-                    android:textSize="14sp"/>
+                    android:text="@string/change_language_button"
+                    android:textSize="14sp" />
 
                 <Spinner
-                    style="@style/Wrap_content"
                     android:id="@+id/spinnerLangTo"
+                    style="@style/Wrap_content"
                     android:layout_weight="2">
                 </Spinner>
             </LinearLayout>
@@ -51,53 +55,64 @@
         <EditText
             android:id="@+id/translateTextInput"
             style="@style/Translate_Elements_Style"
+            android:background="@drawable/view_text_style"
             android:hint="@string/input_text"
-            android:inputType="textCapSentences"
-            android:background="@drawable/view_text_style"/>
+            android:inputType="textCapSentences" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-        <Button
-            android:id="@+id/buttonDeleteText"
-            android:text="@string/delete_buton"
-            android:layout_width="wrap_content"
-            android:layout_height="40sp"
-            android:layout_weight="1"
-            android:textSize="10sp"
-            android:layout_marginStart="6sp" />
+
+            <Button
+                android:id="@+id/buttonDeleteText"
+                android:layout_width="wrap_content"
+                android:layout_height="40sp"
+                android:layout_marginStart="6sp"
+                android:layout_weight="1"
+                android:text="@string/delete_buton"
+                android:textSize="10sp" />
 
             <android.support.v7.widget.AppCompatCheckBox
                 android:id="@+id/bookmarkCheckbox"
                 style="@style/Wrap_content"
+                android:layout_weight="4"
                 android:text="@string/bookmark"
-                android:textSize="14sp"
-                android:layout_weight="4" />
+                android:textSize="14sp" />
         </LinearLayout>
 
         <Button
             android:id="@+id/buttonTranslate"
-            android:text="@string/translate_button"
             style="@style/Translate_Elements_Style"
             android:layout_gravity="center"
-            android:background="@android:color/holo_green_light"/>
+            android:background="@android:color/holo_green_light"
+            android:text="@string/translate_button" />
 
         <TextView
             android:id="@+id/translatedText"
-            android:hint="@string/incomming_translate"
             style="@style/Translate_Elements_Style"
-            android:background="@drawable/view_text_style"/>
-        <TextView
-            android:text="@string/copyright_comment"
+            android:background="@drawable/view_text_style"
+            android:hint="@string/incomming_translate" />
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="3sp"
-            android:textSize="18sp" />
-        <TextView
-            android:text="@string/copyright_comment2"
-            style="@style/Wrap_content"
-            android:layout_margin="3sp"
-            android:textSize="18sp"
-            android:autoLink="web"/>
+            android:orientation="vertical"
+            android:background="@drawable/view_text_style"
+            android:layout_margin="6sp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="3sp"
+                android:text="@string/copyright_comment"
+                android:textSize="18sp" />
+
+            <TextView
+                style="@style/Wrap_content"
+                android:layout_margin="3sp"
+                android:autoLink="web"
+                android:text="@string/copyright_comment2"
+                android:textSize="18sp" />
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

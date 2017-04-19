@@ -15,7 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import dvinc.yatranslatetest2017.database.HistoryContract;
+import dvinc.yatranslatetest2017.database.HistoryContract.*;
 import dvinc.yatranslatetest2017.pageradapters.HistoryPagerAdapter;
 import dvinc.yatranslatetest2017.R;
 /**
@@ -71,8 +71,9 @@ public class MainHistoryFragment extends Fragment {
      * Метод для удаления всех записей из истории.
      */
     private void deleteAllHistory() {
-        int rowsDeleted = getActivity().getApplicationContext().getContentResolver().delete(HistoryContract.HistoryEntry.CONTENT_URI, null, null);
+        int rowsDeleted = getActivity().getApplicationContext().getContentResolver().delete(HistoryEntry.CONTENT_URI, null, null);
         Log.v("HistoryFragment", "Удалено записей из истории: " + rowsDeleted );
+        //TranslateFragment.current_id = 0;
         Toast.makeText(this.getActivity().getWindow().getContext(), "Удалено записей из истории: " +
                 rowsDeleted, Toast.LENGTH_LONG)
                 .show();

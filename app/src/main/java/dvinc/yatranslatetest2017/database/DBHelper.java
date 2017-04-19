@@ -14,10 +14,10 @@ import static dvinc.yatranslatetest2017.database.HistoryContract.HistoryEntry.*;
 /**
  * Класс для создания базы данных.
  */
-class DBHelper extends SQLiteOpenHelper {
+public class DBHelper extends SQLiteOpenHelper {
 
     private final static int DATABASE_VERSION = 1;
-    private final static String DATABASE_NAME = "translateHistory_database";
+    private final static String DATABASE_NAME = "history.db";
 
     DBHelper(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -36,9 +36,9 @@ class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (DATABASE_VERSION < newVersion){
-            db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
-            onCreate(db);
-        }
+//        if (DATABASE_VERSION < newVersion){
+//            db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+//            onCreate(db);
+//        }
     }
 }

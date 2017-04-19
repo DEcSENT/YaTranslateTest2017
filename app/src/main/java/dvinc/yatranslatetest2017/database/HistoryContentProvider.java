@@ -34,6 +34,8 @@ public class HistoryContentProvider extends ContentProvider {
 
     private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
+    public static long updatedItemId = 0;
+
     static {
         sUriMatcher.addURI(HistoryContract.CONTENT_AUTHORITY, HistoryContract.PATH_HISTORY, ALL_HISTORY);
         sUriMatcher.addURI(HistoryContract.CONTENT_AUTHORITY, HistoryContract.PATH_HISTORY + "/#", HISTORY_ID);
@@ -57,7 +59,7 @@ public class HistoryContentProvider extends ContentProvider {
             case ALL_HISTORY:
                 /* Примечение: здесь курсор для всей истории сортируется в обратном порядке, для отображения последних записей вверху истории. */
                 cursor = database.query(HistoryEntry.TABLE_NAME, projection, selection, selectionArgs,
-                        null, null, HistoryEntry._ID + " DESC");
+                        null, null, null /*HistoryEntry._ID + " DESC"*/);
                 break;
             case HISTORY_ID:
                 selection = HistoryEntry._ID + "=?";
@@ -69,7 +71,9 @@ public class HistoryContentProvider extends ContentProvider {
                 throw new IllegalArgumentException("Cannot query unknown URI " + uri);
         }
 
-        cursor.setNotificationUri(getContext().getContentResolver(), uri);
+        if(getContext() != null) {
+            cursor.setNotificationUri(getContext().getContentResolver(), uri);
+        }
 
         return cursor;
     }
@@ -104,6 +108,7 @@ public class HistoryContentProvider extends ContentProvider {
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
         int rowsDeleted;
 
+        updatedItemId = 0;
         final int match = sUriMatcher.match(uri);
         switch (match) {
             case ALL_HISTORY:
@@ -117,8 +122,7 @@ public class HistoryContentProvider extends ContentProvider {
             default:
                 throw new IllegalArgumentException("Deletion is not supported for " + uri);
         }
-
-        if (rowsDeleted != 0) {
+        if (rowsDeleted != 0 & getContext() != null) {
             getContext().getContentResolver().notifyChange(uri, null);
         }
 
@@ -144,37 +148,40 @@ public class HistoryContentProvider extends ContentProvider {
     private Uri insertHistory(Uri uri, ContentValues values) {
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
         long id = database.insert(HistoryEntry.TABLE_NAME, null, values);
+        updatedItemId = id;//DatabaseUtils.queryNumEntries(database, HistoryEntry.TABLE_NAME);
         // If the ID is -1, then the insertion failed. Log an error and return null.
         if (id == -1) {
             Log.e(TAG, "Failed to insert row for " + uri);
             return null;
         }
 
-        getContext().getContentResolver().notifyChange(uri, null);
+        if(getContext() != null) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
 
         // Return the new URI with the ID (of the newly inserted row) appended at the end
         return ContentUris.withAppendedId(uri, id);
     }
 
     private int updateHistory(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        // If there are no values to update, then don't try to update the database
+        // Если нет значений для обновления, возвращаем 0
         if (values.size() == 0) {
             return 0;
         }
 
-        // Otherwise, get writeable database to update the data
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
 
-        // Perform the update on the database and get the number of rows affected
+        // Обновляем запись в базе данных и возвращаем количество обновленных строк
         int rowsUpdated = database.update(HistoryEntry.TABLE_NAME, values, selection, selectionArgs);
 
-        // If 1 or more rows were updated, then notify all listeners that the data at the
-        // given URI has changed
-        if (rowsUpdated != 0) {
+        Log.v("updateHistory", "Rows updated: " + rowsUpdated);
+
+        // Если хотя бы одна строка была обновлена, оповещаем об изменении
+        if (rowsUpdated != 0 & getContext() != null) {
             getContext().getContentResolver().notifyChange(uri, null);
         }
 
-        // Return the number of rows updated
+        // Возвращает количество обновленных строк
         return rowsUpdated;
     }
 }

@@ -1,7 +1,9 @@
 package dvinc.yatranslatetest2017.fragments;
 
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -32,6 +34,7 @@ import java.util.Scanner;
 import javax.net.ssl.HttpsURLConnection;
 
 import dvinc.yatranslatetest2017.R;
+import dvinc.yatranslatetest2017.database.HistoryContentProvider;
 import dvinc.yatranslatetest2017.database.HistoryContract.*;
 import static dvinc.yatranslatetest2017.YandexApiData.*;
 
@@ -64,8 +67,20 @@ public class TranslateFragment extends Fragment{
     private Button buttonChangeLang;
     private CheckBox bookmarkCheckbox;
     private String chooseBookmark = "0";
+    /**
+     * TODO
+     */
     private static int response_code = 0;
+
+    /**
+     * TODO
+     */
     private static String response_code_message = "";
+
+    /**
+     * TODO 
+     */
+    public static long current_id = 0;
 
     /* Стартовые языки Русский - Английский. */
     static final int START_LANG_FROM = 17;
@@ -104,6 +119,7 @@ public class TranslateFragment extends Fragment{
             public void onClick(View v) {
                 translateTextInput.setText("");
                 translatedText.setText("");
+                current_id = 0;
             }
         });
 
@@ -160,12 +176,20 @@ public class TranslateFragment extends Fragment{
         });
     }
 
+    @Override
+    public void onPause(){
+        super.onPause();
+        current_id = 0;
+        Log.v("onPause", "current_id set to "+ current_id);
+    }
+
     // TODO: проверить возможную утечку памяти?
 
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            if (msg.what == TRIGGER_SERACH) {
+            String textInput = translateTextInput.getText().toString();
+            if (msg.what == TRIGGER_SERACH & !textInput.trim().isEmpty()) {
                 BGTask task = new BGTask();
                 task.execute(String.valueOf(translateTextInput.getText()));
             }
@@ -229,19 +253,40 @@ public class TranslateFragment extends Fragment{
             if (response_code == 200) {
                 translatedText.setText(output);
 
+                if(current_id == 0) {
                 /* Передаем данные в контент-провайдер */
-                ContentValues values = new ContentValues();
-                values.put(HistoryEntry.COLUMN_TEXT_INPUT, translateTextInput.getText().toString());
-                values.put(HistoryEntry.COLUMN_TEXT_TRANSLATED, output);
-                values.put(HistoryEntry.COLUMN_LANGUAGES_FROM_TO, stringLangFrom + " - " + stringLangTo);
-                values.put(HistoryEntry.COLUMN_BOOKMARK, chooseBookmark);
+                    ContentValues values = new ContentValues();
+                    values.put(HistoryEntry.COLUMN_TEXT_INPUT, translateTextInput.getText().toString());
+                    values.put(HistoryEntry.COLUMN_TEXT_TRANSLATED, output + current_id);
+                    values.put(HistoryEntry.COLUMN_LANGUAGES_FROM_TO, stringLangFrom + " - " + stringLangTo);
+                    values.put(HistoryEntry.COLUMN_BOOKMARK, chooseBookmark);
 
-                Context context = getActivity().getApplicationContext();
-                if (context != null) {
-                    try {
-                        context.getContentResolver().insert(HistoryEntry.CONTENT_URI, values);
-                    } catch (Exception e) {
-                        Log.v(LOG_TAG, "ALARM IN onPostExecute method" + e);
+                    Context context = getActivity().getApplicationContext();
+                    if (context != null) {
+                        try {
+                            context.getContentResolver().insert(HistoryEntry.CONTENT_URI, values);
+                        } catch (Exception e) {
+                            Log.v(LOG_TAG, "ALARM IN onPostExecute method" + e);
+                        }
+                    }
+                    current_id = (HistoryContentProvider.updatedItemId);
+                }
+                else {
+                    ContentValues values = new ContentValues();
+                    values.put(HistoryEntry.COLUMN_TEXT_INPUT, translateTextInput.getText().toString());
+                    values.put(HistoryEntry.COLUMN_TEXT_TRANSLATED, output + current_id);
+                    values.put(HistoryEntry.COLUMN_LANGUAGES_FROM_TO, stringLangFrom + " - " + stringLangTo);
+                    values.put(HistoryEntry.COLUMN_BOOKMARK, chooseBookmark);
+                    Context context = getActivity().getApplicationContext();
+                    Uri currentHistoryUri = ContentUris.withAppendedId(HistoryEntry.CONTENT_URI, current_id);
+                    if (context != null) {
+                        try {
+                            Log.v(LOG_TAG, "Before insert "+current_id);
+                            context.getContentResolver().update(currentHistoryUri, values, null, null);
+                            Log.v(LOG_TAG, "After insert "+current_id);
+                        } catch (Exception e) {
+                            Log.v(LOG_TAG, "ALARM IN onPostExecute method" + e);
+                        }
                     }
                 }
 

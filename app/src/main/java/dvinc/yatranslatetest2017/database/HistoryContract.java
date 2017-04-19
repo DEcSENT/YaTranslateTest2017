@@ -13,7 +13,6 @@ import android.provider.BaseColumns;
 
 public final class HistoryContract {
 
-    // Чтобы случайно не создать экземпляр класса, даем ему пустой конструктор.
     private HistoryContract() {
     }
 
@@ -52,8 +51,8 @@ public final class HistoryContract {
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_HISTORY;
 
         /* Переменные для создания базы данных.*/
-        final static String TABLE_NAME = "translateHistory";
-        final static String COLUMN_ID = BaseColumns._ID;
+        final static String TABLE_NAME = "history";
+        public final static String COLUMN_ID = BaseColumns._ID;
         public final static String COLUMN_TEXT_INPUT = "textInput";
         public final static String COLUMN_TEXT_TRANSLATED = "textTranslated";
         public final static String COLUMN_LANGUAGES_FROM_TO = "languages_from_to";
