@@ -63,7 +63,7 @@ public class HistoryCursorAdapter extends CursorAdapter implements Filterable{
 
             // Обновляем текстовые поля, подставляя в них данные для текущей записи
             textInputTextView.setText(textInput);
-            translatedTextTextView.setText(translatedText);
+            translatedTextTextView.setText(translatedText.replace("\\n", "\n"));
             languagesTextView.setText(languages.toUpperCase());
 //            bookmarkTextView.setText(bookmark);
 

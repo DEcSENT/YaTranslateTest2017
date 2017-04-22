@@ -78,7 +78,7 @@ public class TranslateFragment extends Fragment{
     private static String response_code_message = "";
 
     /**
-     * TODO 
+     * TODO
      */
     public static long current_id = 0;
 
@@ -137,10 +137,26 @@ public class TranslateFragment extends Fragment{
         bookmarkCheckbox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(bookmarkCheckbox.isChecked()){
-                    chooseBookmark = "1";
-                }else{
-                    chooseBookmark = "0";
+                /* Чтобы лишний раз не дергать метод и перемнные проверяем "текущую сессию", если перевод не выполнен т.е. current_id = 0, то ничего не произойдет.
+                * Если перевод прошел, и current_id != 0, то присваиваем значение переменной chooseBookmark. 1 - избранное, 0 - не избранное. И дальше обновляем строку в базе
+                * по текущему current_id. */
+                if (current_id !=0) {
+                    if (bookmarkCheckbox.isChecked()) {
+                        chooseBookmark = "1";
+                    } else {
+                        chooseBookmark = "0";
+                    }
+                    ContentValues values = new ContentValues();
+                    values.put(HistoryEntry.COLUMN_BOOKMARK, chooseBookmark);
+                    Context context = getActivity().getApplicationContext();
+                    Uri currentHistoryUri = ContentUris.withAppendedId(HistoryEntry.CONTENT_URI, current_id);
+                    if (context != null) {
+                        try {
+                            context.getContentResolver().update(currentHistoryUri, values, null, null);
+                        } catch (Exception e) {
+                            Log.v(LOG_TAG, "Favoutite checkBox" + e);
+                        }
+                    }
                 }
             }
         });
@@ -151,11 +167,10 @@ public class TranslateFragment extends Fragment{
         return view;
     }
 
-    //TODO: здесь что-то не так с методом afterTextChanged, он отправляет пустой текст после быстрого полного побуквенного удаления текста. Нужно пофиксить, иначе выпадает "Код 0"
     @Override
     public void onResume() {
         super.onResume();
-        /* Этот метод был вынесен сюда, чтобы избежать произвольной отправки текста на перевод при пересоздании фрагмента. */
+        /* Этот метод был вынесен сюда, чтобы избежать произвольной отправки текста на перевод при пересоздании фрагмента т.к. метод думает, что текст изменился. */
         translateTextInput.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -179,6 +194,7 @@ public class TranslateFragment extends Fragment{
     @Override
     public void onPause(){
         super.onPause();
+        /* TODO */
         current_id = 0;
         Log.v("onPause", "current_id set to "+ current_id);
     }
@@ -189,6 +205,8 @@ public class TranslateFragment extends Fragment{
         @Override
         public void handleMessage(Message msg) {
             String textInput = translateTextInput.getText().toString();
+            /* При быстром удалении кнопками текста в методе afterTextChanged хэндлер с задержкой остается, а текста уже нет, из-за чего может выпасть исключение в классе BGTask.
+            * Чтобы избавиться от этого была введена дополнительная проверка на пустой текст. */
             if (msg.what == TRIGGER_SERACH & !textInput.trim().isEmpty()) {
                 BGTask task = new BGTask();
                 task.execute(String.valueOf(translateTextInput.getText()));
@@ -216,7 +234,7 @@ public class TranslateFragment extends Fragment{
 
         /**
          *  Метод для создания подключения и отправки запроса в интернет.
-         *  В ответе получаем строку в формате json, парсим её, получаем перевод, и код ответа.
+         *  Получаем ответ, и переводим его в строку в формате json, парсим её, получаем перевод, и код ответа.
          */
         private String getOutputFromUrl(String text) throws IOException {
             String translated = "";
@@ -248,20 +266,18 @@ public class TranslateFragment extends Fragment{
 
         @Override
         protected void onPostExecute(String output) {
-
             /* Если код полученного ответа равен 200, значит перевод выполнен успешно, и данные можно записать в историю. */
             if (response_code == 200) {
-                translatedText.setText(output);
-
+                translatedText.setText(output.replace("\\n", "\n"));
+                ContentValues values = new ContentValues();
+                values.put(HistoryEntry.COLUMN_TEXT_INPUT, translateTextInput.getText().toString());
+                values.put(HistoryEntry.COLUMN_TEXT_TRANSLATED, output);
+                values.put(HistoryEntry.COLUMN_LANGUAGES_FROM_TO, stringLangFrom + " - " + stringLangTo);
+                values.put(HistoryEntry.COLUMN_BOOKMARK, chooseBookmark);
+                Context context = getActivity().getApplicationContext();
                 if(current_id == 0) {
-                /* Передаем данные в контент-провайдер */
-                    ContentValues values = new ContentValues();
-                    values.put(HistoryEntry.COLUMN_TEXT_INPUT, translateTextInput.getText().toString());
-                    values.put(HistoryEntry.COLUMN_TEXT_TRANSLATED, output + current_id);
-                    values.put(HistoryEntry.COLUMN_LANGUAGES_FROM_TO, stringLangFrom + " - " + stringLangTo);
-                    values.put(HistoryEntry.COLUMN_BOOKMARK, chooseBookmark);
-
-                    Context context = getActivity().getApplicationContext();
+                    /* Если перевод новый, то нужно снять галочку с чекбокса, если, вдруг, она там стоит. */
+                    bookmarkCheckbox.setChecked(false);
                     if (context != null) {
                         try {
                             context.getContentResolver().insert(HistoryEntry.CONTENT_URI, values);
@@ -272,18 +288,10 @@ public class TranslateFragment extends Fragment{
                     current_id = (HistoryContentProvider.updatedItemId);
                 }
                 else {
-                    ContentValues values = new ContentValues();
-                    values.put(HistoryEntry.COLUMN_TEXT_INPUT, translateTextInput.getText().toString());
-                    values.put(HistoryEntry.COLUMN_TEXT_TRANSLATED, output + current_id);
-                    values.put(HistoryEntry.COLUMN_LANGUAGES_FROM_TO, stringLangFrom + " - " + stringLangTo);
-                    values.put(HistoryEntry.COLUMN_BOOKMARK, chooseBookmark);
-                    Context context = getActivity().getApplicationContext();
                     Uri currentHistoryUri = ContentUris.withAppendedId(HistoryEntry.CONTENT_URI, current_id);
                     if (context != null) {
                         try {
-                            Log.v(LOG_TAG, "Before insert "+current_id);
                             context.getContentResolver().update(currentHistoryUri, values, null, null);
-                            Log.v(LOG_TAG, "After insert "+current_id);
                         } catch (Exception e) {
                             Log.v(LOG_TAG, "ALARM IN onPostExecute method" + e);
                         }

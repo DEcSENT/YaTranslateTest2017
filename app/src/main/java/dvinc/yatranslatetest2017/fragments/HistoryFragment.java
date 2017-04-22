@@ -87,8 +87,47 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
             }
         });
 
+        /* По долгому нажатию на выбранный перевод запускаем диалог, для подтверждения\отмены удаления выбранного элемента. */
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                showConfirmatonDeleteOneItemDialog(id);
+                return true;
+            }
+        });
+
         getLoaderManager().initLoader(HISTORY_LOADER, null, this);
         return view;
+    }
+
+    /**
+     * Предупреждающий диалог для удаления одной записи из истории.
+     */
+    private void showConfirmatonDeleteOneItemDialog(final long item_id){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity().getWindow().getContext());
+        builder.setMessage(R.string.delete_dialog_msg2);
+        builder.setPositiveButton(R.string.delete_history_yes, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                deleteOneItemFromHistory(item_id);
+            }
+        });
+        builder.setNegativeButton(R.string.delete_history_no, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    /**
+     * Метод для удаления одной записи из истории.
+     */
+    private void deleteOneItemFromHistory(long id){
+        Uri currentUri = ContentUris.withAppendedId(HistoryEntry.CONTENT_URI, id);
+        getActivity().getApplicationContext().getContentResolver().delete(currentUri, null, null);
     }
 
     @Override

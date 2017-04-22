@@ -73,7 +73,6 @@ public class MainHistoryFragment extends Fragment {
     private void deleteAllHistory() {
         int rowsDeleted = getActivity().getApplicationContext().getContentResolver().delete(HistoryEntry.CONTENT_URI, null, null);
         Log.v("HistoryFragment", "Удалено записей из истории: " + rowsDeleted );
-        //TranslateFragment.current_id = 0;
         Toast.makeText(this.getActivity().getWindow().getContext(), "Удалено записей из истории: " +
                 rowsDeleted, Toast.LENGTH_LONG)
                 .show();

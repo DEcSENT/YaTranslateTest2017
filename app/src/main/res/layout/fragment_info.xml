@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@drawable/view_text_style"
+    android:layout_margin="6sp">
 
     <LinearLayout
         style="@style/Translate_Elements_Style"
-        android:background="@drawable/view_text_style"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="3sp"
-            android:text="@string/info_text"
+            android:text="@string/small_instruction"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textSize="18sp" />
 
@@ -33,4 +33,4 @@
             android:text="@string/copyright_comment2"
             android:textSize="18sp" />
     </LinearLayout>
-</LinearLayout>
+</ScrollView>
