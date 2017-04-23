@@ -36,14 +36,12 @@ import javax.net.ssl.HttpsURLConnection;
 import dvinc.yatranslatetest2017.R;
 import dvinc.yatranslatetest2017.database.HistoryContentProvider;
 import dvinc.yatranslatetest2017.database.HistoryContract.*;
-import static dvinc.yatranslatetest2017.YandexApiData.*;
+import static dvinc.yatranslatetest2017.YandexAPIData.*;
 
 /**
  * Created by Space 5 on 28.03.2017.
  *
  */
-
-// TODO: добавить больше комментариев.
 
 /**
  * Класс для фрагмента с переводчиком текста.
@@ -53,11 +51,11 @@ public class TranslateFragment extends Fragment{
     private static final String LOG_TAG = "TranslateFragment";
 
     private final int TRIGGER_SERACH = 1;
-    // Where did 1000 come from? It's arbitrary, since I can't find average android typing speed.
+    /* Задержка в миллисекундах для хэндлера. */
     private final long SEARCH_TRIGGER_DELAY_IN_MS = 1000;
 
     private EditText translateTextInput;
-    private Button buttonTranslate;
+    //private Button buttonTranslate;
     private TextView translatedText;
     private Button buttonDeleteInputText;
     private Spinner spinnerLangFrom;
@@ -66,19 +64,24 @@ public class TranslateFragment extends Fragment{
     private String stringLangTo = "en";
     private Button buttonChangeLang;
     private CheckBox bookmarkCheckbox;
-    private String chooseBookmark = "0";
+
     /**
-     * TODO
+     * Переменная для хранения значения избранного, 1 - избранное, 0 - не избранное.
+     */
+    public static String chooseBookmark = "0";
+
+    /**
+     * Переменная для хранения кода ответа при переводе текста.
      */
     private static int response_code = 0;
 
     /**
-     * TODO
+     * Переменная для хранения сообщения, расшифровывающего код ответа.
      */
     private static String response_code_message = "";
 
     /**
-     * TODO
+     * Переменная для создания нового перевода (если current_id = 0), либо для обновления существующего (если current_id != 0).
      */
     public static long current_id = 0;
 
@@ -92,7 +95,7 @@ public class TranslateFragment extends Fragment{
         View view = inflater.inflate(R.layout.fragment_translate, container, false);
 
         translateTextInput = (EditText) view.findViewById(R.id.translateTextInput);
-        buttonTranslate = (Button) view.findViewById(R.id.buttonTranslate);
+        //buttonTranslate = (Button) view.findViewById(R.id.buttonTranslate);
         translatedText = (TextView) view.findViewById(R.id.translatedText);
         buttonDeleteInputText = (Button) view.findViewById(R.id.buttonDeleteText);
         buttonChangeLang = (Button) view.findViewById(R.id.buttonChangeLang);
@@ -101,19 +104,20 @@ public class TranslateFragment extends Fragment{
         /* Скрываем клавиатуру при старте приложения. */
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-        buttonTranslate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Editable textObjectFromEdit = translateTextInput.getText();
-                String newString = textObjectFromEdit.toString();
-                if(!newString.equals("")) {
-                    BGTask task = new BGTask();
-                    task.execute(String.valueOf(translateTextInput.getText()));
-                }
-            }
-        });
+        // Физическая кнопка для отправки текста на перевод
+//        buttonTranslate.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Editable textObjectFromEdit = translateTextInput.getText();
+//                String newString = textObjectFromEdit.toString();
+//                if(!newString.equals("")) {
+//                    BGTask task = new BGTask();
+//                    task.execute(String.valueOf(translateTextInput.getText()));
+//                }
+//            }
+//        });
 
-        /** Метод для очистки поля ввода текста на перевод и самого поля для перевода. */
+        /** Метод для очистки полей ввода-вывода переводов. */
         buttonDeleteInputText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -139,7 +143,7 @@ public class TranslateFragment extends Fragment{
             public void onClick(View v) {
                 /* Чтобы лишний раз не дергать метод и перемнные проверяем "текущую сессию", если перевод не выполнен т.е. current_id = 0, то ничего не произойдет.
                 * Если перевод прошел, и current_id != 0, то присваиваем значение переменной chooseBookmark. 1 - избранное, 0 - не избранное. И дальше обновляем строку в базе
-                * по текущему current_id. */
+                * по текущему _id. */
                 if (current_id !=0) {
                     if (bookmarkCheckbox.isChecked()) {
                         chooseBookmark = "1";
@@ -154,7 +158,7 @@ public class TranslateFragment extends Fragment{
                         try {
                             context.getContentResolver().update(currentHistoryUri, values, null, null);
                         } catch (Exception e) {
-                            Log.v(LOG_TAG, "Favoutite checkBox" + e);
+                            Log.v(LOG_TAG, "Favoutite checkBox " + e);
                         }
                     }
                 }
@@ -194,13 +198,11 @@ public class TranslateFragment extends Fragment{
     @Override
     public void onPause(){
         super.onPause();
-        /* TODO */
         current_id = 0;
         Log.v("onPause", "current_id set to "+ current_id);
     }
 
-    // TODO: проверить возможную утечку памяти?
-
+    // TODO: Здесь возможна утечка памяти...
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -258,7 +260,7 @@ public class TranslateFragment extends Fragment{
 
                 response_code = Integer.parseInt(jsonString.substring(8, 11));
             } catch (Exception e){
-                Log.v(LOG_TAG, "ALARM in getOutputFromUrl method"+e);
+                Log.v(LOG_TAG, "ALARM in getOutputFromUrl method " + e);
             }
 
             return translated;
@@ -282,9 +284,10 @@ public class TranslateFragment extends Fragment{
                         try {
                             context.getContentResolver().insert(HistoryEntry.CONTENT_URI, values);
                         } catch (Exception e) {
-                            Log.v(LOG_TAG, "ALARM IN onPostExecute method" + e);
+                            Log.v(LOG_TAG, "ALARM IN onPostExecute method " + e);
                         }
                     }
+                    /* После того, как новый перевод записан в базу, получаем id этого перевода, чтобы вести и обновлять "текущую сессию перевода". */
                     current_id = (HistoryContentProvider.updatedItemId);
                 }
                 else {
@@ -293,12 +296,11 @@ public class TranslateFragment extends Fragment{
                         try {
                             context.getContentResolver().update(currentHistoryUri, values, null, null);
                         } catch (Exception e) {
-                            Log.v(LOG_TAG, "ALARM IN onPostExecute method" + e);
+                            Log.v(LOG_TAG, "ALARM IN onPostExecute method " + e);
                         }
                     }
                 }
-
-                /* Если код полученного ответа равен чему-то другому, значит что-то пошло не так. В зависимости от кода показывается всплывающее сообщение, соответствующее этому коду. */
+                /* Если код полученного ответа не равен 200, значит что-то пошло не так. В зависимости от кода показывается всплывающее сообщение, соответствующее этому коду. */
             } else if (response_code == 401){
                 response_code_message = getResources().getString(R.string.code_401);
             } else if (response_code == 402){
@@ -313,7 +315,7 @@ public class TranslateFragment extends Fragment{
                 response_code_message = getResources().getString(R.string.code_501);
             } else {
 
-                /* Если ответное сообщение не было получено, значит нет подключения к интернету. */
+                /* Если ответное сообщение не было получено, либо response_code = 0, значит нет подключения к интернету. */
                 response_code_message = getResources().getString(R.string.code_something_wrong);
             }
             if(response_code != 200) {
@@ -328,8 +330,8 @@ public class TranslateFragment extends Fragment{
     }
 
     /**
-     * Метод для отображения всплывающего сообщения в случае, если что-то пойдет неправильно и перевода не будет, либо возникнет ошибка на стороне Яндекса.
-     * @param code - Код ошибки.
+     * Метод для отображения всплывающего сообщения в случае, если что-то пойдет неправильно и перевода не будет, либо придет ответный код, не соответствующий успешному переводу.
+     * @param code - Код ответа.
      * @param code_message - Текст сообщения.
      */
     private void showCodeMessage(int code, String code_message){

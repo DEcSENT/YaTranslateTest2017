@@ -9,7 +9,9 @@ import android.provider.BaseColumns;
  *
  */
 
-// TODO: Добавить описания классов
+/**
+ * Класс-контракт для хранения переменных, используемых в контент-провайдере и базе данных.
+ */
 
 public final class HistoryContract {
 
@@ -38,21 +40,15 @@ public final class HistoryContract {
          */
         public static final Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, PATH_HISTORY);
 
-        /**
-         * Данные по ссылке {@link #CONTENT_URI} для всего списка истории.
-         */
         static final String CONTENT_LIST_TYPE =
                 ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_HISTORY;
 
-        /**
-         * Данные по ссылке {@link #CONTENT_URI} для отдельной записи в истории.
-         */
         static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_HISTORY;
 
         /* Переменные для создания базы данных.*/
         final static String TABLE_NAME = "history";
-        public final static String COLUMN_ID = BaseColumns._ID;
+        final static String COLUMN_ID = BaseColumns._ID;
         public final static String COLUMN_TEXT_INPUT = "textInput";
         public final static String COLUMN_TEXT_TRANSLATED = "textTranslated";
         public final static String COLUMN_LANGUAGES_FROM_TO = "languages_from_to";

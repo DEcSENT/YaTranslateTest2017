@@ -3,24 +3,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/view_text_style"
+
     android:layout_margin="6sp">
 
     <LinearLayout
         style="@style/Translate_Elements_Style"
-        android:orientation="vertical">
+        android:background="@drawable/view_text_style"
+        android:orientation="vertical"
+        android:layout_margin="6sp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="3sp"
             android:text="@string/small_instruction"
-            android:textAppearance="?android:attr/textAppearanceSmall"
             android:textSize="18sp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:layout_margin="3sp"
             android:text="@string/copyright_comment"
             android:textSize="18sp" />
@@ -29,6 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="3sp"
+            android:gravity="center"
             android:autoLink="web"
             android:text="@string/copyright_comment2"
             android:textSize="18sp" />

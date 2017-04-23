@@ -1,10 +1,5 @@
 package dvinc.yatranslatetest2017.database;
 
-/**
- * Created by Space 5 on 06.04.2017.
- *
- */
-
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -18,8 +13,10 @@ import android.util.Log;
 
 import dvinc.yatranslatetest2017.database.HistoryContract.HistoryEntry;
 
-
-// TODO: проверить предупреждение о NPE. Добавить больше комментариев
+/**
+ * Created by Space 5 on 06.04.2017.
+ *
+ */
 
 /**
  * Класс контент-провайдера.
@@ -59,7 +56,7 @@ public class HistoryContentProvider extends ContentProvider {
             case ALL_HISTORY:
                 /* Примечение: здесь курсор для всей истории сортируется в обратном порядке, для отображения последних записей вверху истории. */
                 cursor = database.query(HistoryEntry.TABLE_NAME, projection, selection, selectionArgs,
-                        null, null, null /*HistoryEntry._ID + " DESC"*/);
+                        null, null, HistoryEntry._ID + " DESC");
                 break;
             case HISTORY_ID:
                 selection = HistoryEntry._ID + "=?";
@@ -91,7 +88,6 @@ public class HistoryContentProvider extends ContentProvider {
         }
     }
 
-    @Nullable
     @Override
     public Uri insert(@NonNull Uri uri, ContentValues values) {
         final int match = sUriMatcher.match(uri);
@@ -148,8 +144,8 @@ public class HistoryContentProvider extends ContentProvider {
     private Uri insertHistory(Uri uri, ContentValues values) {
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
         long id = database.insert(HistoryEntry.TABLE_NAME, null, values);
-        updatedItemId = id;//DatabaseUtils.queryNumEntries(database, HistoryEntry.TABLE_NAME);
-        // If the ID is -1, then the insertion failed. Log an error and return null.
+        updatedItemId = id;
+        // Если ID равен -1, значит запись в историю не получилась
         if (id == -1) {
             Log.e(TAG, "Failed to insert row for " + uri);
             return null;
@@ -159,7 +155,6 @@ public class HistoryContentProvider extends ContentProvider {
             getContext().getContentResolver().notifyChange(uri, null);
         }
 
-        // Return the new URI with the ID (of the newly inserted row) appended at the end
         return ContentUris.withAppendedId(uri, id);
     }
 

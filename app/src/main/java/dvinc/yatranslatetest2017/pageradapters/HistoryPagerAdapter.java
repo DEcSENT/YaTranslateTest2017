@@ -12,7 +12,8 @@ import dvinc.yatranslatetest2017.fragments.*;
  */
 
 /**
- * TODO: описание класса
+ * Класс адаптера для заполнения страниц.
+ * Содержит в себе фрагменты: История, Избранное.
  */
 public class HistoryPagerAdapter extends FragmentStatePagerAdapter {
     private int mNumOfTabs;

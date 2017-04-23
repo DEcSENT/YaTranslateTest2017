@@ -14,7 +14,7 @@ import static dvinc.yatranslatetest2017.database.HistoryContract.HistoryEntry.*;
 /**
  * Класс для создания базы данных.
  */
-public class DBHelper extends SQLiteOpenHelper {
+class DBHelper extends SQLiteOpenHelper {
 
     private final static int DATABASE_VERSION = 1;
     private final static String DATABASE_NAME = "history.db";

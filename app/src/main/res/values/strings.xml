@@ -9,7 +9,7 @@
     <string name="delete_buton">Очистить поле ввода</string>
     <string name="connection">Подключение</string>
     <string name="choose_language">Выберите языки</string>
-    <string name="change_language_button">&#60;----&#62;</string>
+    <string name="change_language_button"><![CDATA[<—>]]></string>
 
     <string name="empty_history_text">Нет записей в истории</string>
     <string name="empty_history_start">Переведите несколько слов</string>

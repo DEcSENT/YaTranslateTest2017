@@ -12,7 +12,8 @@ import dvinc.yatranslatetest2017.fragments.*;
  */
 
 /**
- * TODO: описание класса
+ * Класс адаптера для заполнения страниц.
+ * Содержит в себе фрагменты: Перевод, История, Инфо.
  */
 public class PagerAdapter extends FragmentStatePagerAdapter {
     private int mNumOfTabs;
@@ -28,15 +29,20 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
             case 0:
                 return new TranslateFragment();
             case 1:
-                // Здесь и ниже переменная зануляется TODO: больше написать
-                TranslateFragment.current_id = 0;
+                setDefaultValue();
                 return new MainHistoryFragment();
             case 2:
-                TranslateFragment.current_id = 0;
+                setDefaultValue();
                 return new InfoFragment();
             default:
                 return null;
         }
+    }
+
+    /* При переходе на новый фрагмент устанавливаем значения по умолчанию для нового перевода в фрагменте Перевод. */
+    private void setDefaultValue(){
+        TranslateFragment.current_id = 0;
+        TranslateFragment.chooseBookmark = "0";
     }
 
     @Override
