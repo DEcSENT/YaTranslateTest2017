@@ -195,13 +195,6 @@ public class TranslateFragment extends Fragment{
         });
     }
 
-    @Override
-    public void onPause(){
-        super.onPause();
-        current_id = 0;
-        Log.v("onPause", "current_id set to "+ current_id);
-    }
-
     // TODO: Здесь возможна утечка памяти...
     private Handler handler = new Handler() {
         @Override

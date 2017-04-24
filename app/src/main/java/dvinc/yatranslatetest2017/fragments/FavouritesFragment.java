@@ -42,7 +42,7 @@ public class FavouritesFragment extends Fragment implements LoaderManager.Loader
         favouritesCursorAdapter = new HistoryCursorAdapter(getContext(), null);
         listViewFavourites.setAdapter(favouritesCursorAdapter);
 
-        /* По клику в listview ставим\убираем метку "Избранного". */
+        /* По клику на отдельный перевод в listview ставим\убираем метку "Избранного". */
         listViewFavourites.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {

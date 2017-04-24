@@ -44,7 +44,7 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
         historyCursorAdapter = new HistoryCursorAdapter(getContext(), null);
         listView.setAdapter(historyCursorAdapter);
 
-        /* По клику в listview ставим\убираем метку "Избранного". */
+        /* По клику на отдельный перевод в listview ставим\убираем метку "Избранного". */
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {

@@ -92,7 +92,8 @@
             <TextView
                 android:id="@+id/translatedText"
                 style="@style/Translate_Elements_Style"
-                android:hint="@string/incomming_translate" />
+                android:hint="@string/incomming_translate"
+                android:freezesText="true"/>
 
             <android.support.v7.widget.AppCompatCheckBox
                 android:id="@+id/bookmarkCheckbox"
